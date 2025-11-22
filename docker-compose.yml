@@ -1,0 +1,43 @@
+version: "3.9"
+
+services:
+  todo-db:
+    image: postgres:16-alpine
+    container_name: todo-db
+    environment:
+      POSTGRES_USER: todo_user
+      POSTGRES_PASSWORD: todo_password
+      POSTGRES_DB: todo_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+  todo-backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.backend
+    container_name: todo-backend
+    environment:
+      DATABASE_URL: postgres://todo_user:todo_password@todo-db:5432/todo_db
+      PORT: 4000
+      CORS_ORIGIN: http://localhost:3000
+    depends_on:
+      - todo-db
+    ports:
+      - "4000:4000"
+
+  todo-frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.frontend
+    container_name: todo-frontend
+    environment:
+      VITE_API_URL: http://localhost:4000
+    depends_on:
+      - todo-backend
+    ports:
+      - "3000:80"
+
+volumes:
+  db-data:
