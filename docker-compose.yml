@@ -16,7 +16,7 @@ services:
   todo-backend:
     build:
       context: ./backend
-      dockerfile: Dockerfile.backend
+      dockerfile: Dockerfile
     container_name: todo-backend
     environment:
       DATABASE_URL: postgres://todo_user:todo_password@todo-db:5432/todo_db
@@ -30,7 +30,7 @@ services:
   todo-frontend:
     build:
       context: ./frontend
-      dockerfile: Dockerfile.frontend
+      dockerfile: Dockerfile
     container_name: todo-frontend
     environment:
       VITE_API_URL: http://localhost:4000
